@@ -1,0 +1,109 @@
+"""
+#生成式
+prices = {
+	'meat' : 543.2,
+	'duck' : 123.56,
+	'dog' : 45.67,
+	'horse' : 78.55,
+	'miao' : 123.55
+}
+price = {key : value for key, value in prices.items() if value > 100}
+print(price)
+
+#嵌套的列表
+names = ['小明', '小红', '小王']
+courses = ['英语', '数学', '生物', '物理']
+chart = [[None]*len(courses) for _ in range(len(names))]
+for low, name in enumerate(names):
+	for lol, course in enumerate(courses):
+		chart[low][lol] = float(input(f'{name}的{course}成绩为：'))
+print(chart)
+
+#heapq模块(堆排列)
+import heapq
+list1 = [44, 23, 56, 34, 33, 55, 234, 45, 24, 46]
+list2 = [
+{'name' : '小明', 'shares':45, 'price':234},
+{'name' : '小红', 'shares':55, 'price':567},
+{'name' : '小王', 'shares':89, 'price':678},
+{'name' : '小玉', 'shares':67, 'price':980},
+]
+print(heapq.nlargest(3, list1))
+print(heapq.nsmallest(3, list1))
+print(heapq.nlargest(2, list2, key = lambda x :x['shares']))
+print(heapq.nlargest(2, list2, key=lambda x:x['price']))
+
+#itertools模块(迭代工具)
+import itertools
+#产生abcd全排列
+print(itertools.permutations('abcd'))
+#产生abcde的五选三组合
+print(itertools.combinations('abcde', 5))
+#产生abcd和123的笛卡尔积
+print(itertools.product('abcd', '123'))
+#产生abc的无限序列
+print(itertools.cycle(('a','b','c')))
+
+
+#函数filter, map, lambda
+items = list(map(lambda x : x**2, filter(lambda x: x%2 , range(1,10))))
+#map(function, iterable)可迭代对象根据某种方法排序
+#filter(function, iterable)可迭代对象根据某种判断方法返回一个可迭代对象
+
+#面向对象(工资结算)
+from abc import ABCMeta, abstractmethod
+#加上@abc.abstractmethod装饰器后严格控制子类必须实现这个方法
+class Employee(metaclass = ABCMeta): 
+	#多态，代表同一事物，不同功能
+	def __init__(self, name):
+		self.name = name
+	@abstractmethod
+	def get_salary(self):
+		pass
+
+class Manager(Employee):
+	def get_salary(self):
+		return 15000.0
+
+class Programmer(Employee):
+	def __init__(self, name, hour):
+		super().__init__(name)
+		self.hour = hour
+	def get_salary(self):
+		return  200.0 * self.hour
+
+class Buy(Employee):
+	def __init__(self, name, take):
+		super().__init__(name)
+		self.take = take
+	def get_salary(self):
+		return 1800 + self.take * 0.05
+
+class Figure:
+	@staticmethod
+	def classfy(job, *arg, **warg):
+		classfyer = {'M': Manager, 'P' : Programmer, 'B' : Buy}
+		cls = classfyer[job.upper()]
+		return cls(*arg, **warg) if cls else None
+
+def main():
+	employ = [
+	Figure.classfy('M', '小明'),
+	Figure.classfy('P', '小红', 45),
+	Figure.classfy('B', '小雨', 20000)
+	]
+	for emp in employ:
+		print(f'{emp.name}: {emp.get_salary(): .2f}元')
+
+if __name__ == '__main__':
+	main()
+"""
+"""
+经验：符号常量总是优于字面常量，枚举类型是定义符号常量的最佳选择
+"""
+typedef struct _object {
+    /* 引用计数 */
+    int ob_refcnt;
+    /* 对象指针 */
+    struct _typeobject *ob_type;
+} PyObject;
