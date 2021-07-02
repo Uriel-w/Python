@@ -1,0 +1,138 @@
+
+#显示跑马灯文字
+import os
+import time
+def main():
+	content = str(input('输入显示内容：'))
+	while True:
+		os.system('cls')
+		print(content)
+		time.sleep(0.2)
+		content = content[1:] + content[0]
+main()
+
+#产生验证码
+import random
+def generate_code(code_len=4):
+	all_char = '1234567890qwertyuiopasdfghjklmnbvcxzQWERTYUIOPLKJHGFDSAZXCVBNM'
+	longs = len(all_char) - 1
+	code = ' '
+	for i in range(code_len):
+		index = random.randint(0,longs)
+		code += all_char[index]
+	return code
+print(generate_code())
+
+#返回文件后缀名(不好理解)
+def get_file(filename,dot=False):
+	pos = filename.rfind('.')
+	print(pos)
+	if 0 < pos < len(filename) - 1:
+		index = pos if dot else pos + 1
+		return filename[index:]
+	else:
+		return ' '
+print(get_file('ddd.py'))
+
+#列表最大的两个数
+def max(*lists):
+	longs = len(lists)
+	a = 0
+	b = 0
+	d=[]
+	for i in range(0,longs):
+		if lists[i] >=a:
+			a =  lists[i]
+	for f in lists:
+		d.append(f)
+	d.remove(a)
+	for x in range(0,longs-1):
+		if d[x] >=b:
+			b =  d[x]
+	return a,b
+print(max(1,4,6,7,34,66,6))
+
+#根据年月日确定是第几天
+def is_leap_year(year):
+   
+    return year % 4 == 0 and year % 100 != 0 or year % 400 == 0
+
+
+def which_day(year, month, date):
+  
+   
+    days_of_month = [
+        [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    ][is_leap_year(year)]
+    total = 0
+    for index in range(month - 1):
+        total += days_of_month[index]
+    return total + date
+
+
+def main():
+    print(which_day(1980, 11, 28))
+    print(which_day(1981, 12, 31))
+    print(which_day(2018, 1, 1))
+    print(which_day(2016, 3, 1))
+
+
+if __name__ == '__main__':
+    main()
+
+#杨辉三角
+def yanghui():
+	num= int(input('输入打印多少行：'))
+	yh = [[]]*num   #准备num个二阶数组
+	for row in range(len(yh)):   #打印num行的数据
+		yh[row] = [None] * (row + 1)   #每一行显示的个数
+		for col in range(len(yh[row])):  #打印每一行数据 
+			if col == 0 or col == row:     #第一列和索引相同处赋值为1
+				yh[row][col] = 1
+			else:                           #其他位置的值等于左上方的值加上正上方的值
+				yh[row][col] = yh[row-1][col] + yh[row-1][col-1]
+			print(yh[row][col], end = '\t')   
+		print()
+
+print(yanghui())
+
+#机选双色球
+from random import randrange, randint, sample
+def function2(row):
+	for a, ball in enumerate(row):  #循环索引和数值
+		if a == len(row) - 1:
+			print('|', end = ' ')  #最后一位和前六位区分开
+		print('%02d' % ball, end=' ') #打印每位数值，不够2位用0表示
+	print()
+def function1():
+	fw = [x for x in range(1, 34)] #定义取值区间
+	qian = []
+	qian = sample(fw, 6)   #在区间内随机选取六个数
+	qian.sort()
+	qian.append(randint(1,16))  #随机选取确定最后一位数
+	return qian
+def main():
+	number = int(input('机选几注：'))
+	for _ in range(number):
+		function2(function1())
+print(main())
+
+#正则表达式(提取电话号码)
+import re
+def main():
+	pattern = re.compile(r'(?<=\D)1[34578]\d{9}(?=\D)')
+	sentence = '''
+	通过学校3450054452975次的调查，\
+	发现5月28日号码13784932456\
+	给号码15875349204发过短信17438904720
+	'''
+	mylist = re.findall(pattern,sentence)
+	print(mylist)
+	for temp in pattern.finditer(sentence):
+		print(temp.group())
+	m = pattern.search(sentence)
+	while m:
+		print(m.group())
+if __name__ == '__main__':
+	main()
