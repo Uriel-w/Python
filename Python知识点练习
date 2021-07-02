@@ -1,0 +1,230 @@
+
+#1.计算两个正数的最大公约数和最小公倍数
+def function1(n1,n2):
+	if n1 > n2:
+		n1 , n2 = n2 , n1
+	for i in range(n1,0,-1):
+		if n1 % i == 0 and n2 % i == 0:
+			return i
+def function2(n1,n2):
+	return n1*n2//function1(n1,n2)
+
+#10.判断是否为素数
+def sushu(number):
+	a = 2
+	for i in range(2 , number - 1):
+		if number % i == 0 :
+			a = 1
+	if a == 1:
+		return False
+	else:
+		return True
+#运用
+s1 = 'hello ' * 4
+s2 = 'hello,world'
+print(len(s1),s2.title(),s1.upper())
+print(s1.index('lo'))
+print('{0} * {1} = {2}'.format(s1,s2,s1 + s2))
+
+#列表
+list1 = [3,4,5,6,7,88,90]
+print(list1)
+a = list1[3:5]
+b = list1[2]
+print(a,b)
+for x in range(len(list1)):
+	print(list1[x])
+for index, elem in enumerate(list1):
+	print(index,elem)
+list1.append(b)
+list1.insert(4,20)
+print(list1)
+list2 = ['sdf','alte','cllect','fast','baby']
+list3 = sorted(list2)
+list4 = list2.sort(reverse = True)
+print(list2,'\n',list3,'\n',list4)
+
+#生成器
+import sys
+list1= [x for x in range(1,10)]
+print(list1)
+print(sys.getsizeof(list1))
+
+#元组
+import sys
+list1 = ('cmd',5,'贵州遵义')
+print(list1,sys.getsizeof(list1))
+
+#集合不存在重复性
+set1 = {1, 4, 23, 55, 43,4}
+print(set1)
+print('lenth:', len(set1))
+set1.add(88)
+set1.update([5,7])
+set1.discard(4)
+set1.remove(1)
+print(set1)
+set2 = set(range(0,5))
+print(set2)
+print(set1 & set2)
+print(set1 | set2)
+print(set1 - set2)
+print(set1 <= set2)
+print(set1 ^ set2)
+
+#字典
+scores = dict(a = 1, b = 3, c = 6)
+scores1 = {'gz':20,'sc':66,'zy':3}
+print(scores)
+print(scores1)
+cs = scores1['gz']
+print(cs)
+for key in scores:
+	print(key,scores[key])
+
+#类
+class studengt(object):
+	def __init__(self, name,age):
+		self.name = name
+		self.age = age
+	def study(self, discipline):
+		print('%s正在学习%s。'%(self.name, discipline))
+	def whatch(self):
+		if self.age < 18:
+			print('%s正在看 熊出没' %self.name)
+		else:
+			print('%s正在看 迪迦.'%self.name)
+def studengt1():
+	stu1 = studengt('wgy', 23)
+	stu1.whatch()
+	stu1.study('zgggS')
+
+print(studengt1())
+
+from time import sleep
+class day():
+	def __init__(self, hour = 0, minute = 0, second = 0):
+		self.hour = hour
+		self.minute = minute
+		self.second = second
+	def cycle(self):
+		self.second += 1
+		if self.second == 60:
+			self.second = 0
+			self.minute += 1
+			if self.minute == 60:
+				self.minute = 1
+				self.hour += 0
+				if self.hour == 24:
+					self.hour = 0
+	def disply (self):
+		print('%02d : %02d : %02d' %(self.hour, self.minute, self.second))
+
+def main():
+	time = day(12,33,44)
+	while True:
+		day.disply( time)
+		sleep(1)
+		day.cycle(time)
+if __name__ == '__main__':
+	main()
+
+#正则表达式(qq，用户名)
+import re
+#调用正则表达式模块re
+def main():
+	user_name = input('请输入用户名：')
+	qq_number = input('请输入qq号：')
+	m1 = re.match(r'^[0-9a-zA-Z]{6,20}$', user_name) #判断格式是否符合
+	m2 = re.match(r'^[1-9]\d{4,11}', qq_number)
+	if not m1:
+		print('用户名不存在')
+	if not m2:
+		print('qq不存在')
+	if m1 and m2:
+		print('格式正确')
+
+print(main())
+
+#多进程实现文件下载
+from multiprocessing import Process 
+#linux用os模块fork()函数创建进程
+#Windows用multiprocessing模块中的Process类创建进程
+from os import getpid 
+#返回进程号
+from random import randint
+from time import time, sleep
+def downlode(filename):
+	print('启动下载程序，进程号%s' % getpid)
+	print('开始下载%s...' %filename)
+	downlode_time = randint(5,10)
+	sleep(downlode_time)
+	print('%s下载完成！耗费%d秒' %(filename, downlode_time))
+
+def main():
+	start = time() #开始计时
+	m1 = Process(target = downlode, args = ('python从零开始.ptf', ))
+	#Process类创建了进程对象，通过target参数我们传入一个函数来表示进程启动后要执行的代码，后面的args是一个元组，它代表了传递给函数的参数。
+	m1.start()
+	m2 = Process(target= downlode, args = ('python的多进程.ptf', ))
+	m2.start()
+	#start方法用来启动进程
+	m1.join()
+	#join方法表示等待进程执行结束
+	m2.join()
+	end = time() #结束计时
+	print('总共耗费了%.2f秒' %(end - start))
+
+if __name__ == '__main__':
+	main()
+
+#多进程实现文件下载
+from threading import Thread
+from random import randint
+from time import time, sleep
+def download(filename):
+	print('%s文件开始下载....' %filename)
+	time_filename = randint(5, 12)
+	sleep(time_filename)
+	print('%s下载结束，下载花费%d秒' %(filename, time_filename))
+def main():
+	start = time()
+	m1 = Thread(target = download, args = ('python从零开始.ptf', ))
+	m1.start()
+	m2 = Thread(target = download, args=('pytn的多线程应用.pdf', ))
+	m2.start()
+	m1.join()
+	m2.join()
+	end = time()
+	print('总耗费%d秒.' %(start - end))
+if __name__ == '__main__':
+	main()
+
+#API的调用
+from time import time
+from threading import Thread
+import requests
+class daygas():
+	def __init__(self, url):
+		self.url = url
+
+	def run(self):
+		resp = requests.get(self.url)
+		with open(daygas.json,'w') as f:
+			f.write(resp)
+def main():
+	resp = requests.get('http://api.tianapi.com/txapi/tianqi/index')
+	for x in resp:
+		url = x
+		daygas(url)
+
+if __name__ == '__main__':
+	main()
+
+#操作图像
+from PIL import Image
+image = Image.open('C:/Users/ASUS/Pictures/Saved Pictures/1.jpg')
+print(image.format, image.size, image.mode)
+image.show()
+rect = 60, 30, 330, 340
+image.crop(rect).show()
