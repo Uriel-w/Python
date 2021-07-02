@@ -1,0 +1,197 @@
+
+#算法：解决问题的方法和步骤
+
+#排序算法
+#选择排序
+def select(items, comp = lambda x,y : x <y):
+	#通过隐藏函数lambda判断两个数的大小
+	items = items[:]
+	for i in range(len(items) - 1):
+		min = i
+		for j in range(i+1, len(items)):
+			if comp(items[j], items[min]):
+				#获得j以后的最小值
+				min = j
+		items[i], items[min] = items[min], items[i]
+		#将判断得到的最小值放在前面
+	return items
+
+#冒泡排序
+def maopao(items, tem = lambda x, y : x > y):
+	items = items[:]
+	for i in range(len(items) - 1):
+		exambine = False
+		for j in range(len(items) - 1 - i):
+			#把最大的放在最后
+			if tem(items[j], items[j + 1]):
+				items[j], items[j + 1] = items[j+1], items[j]
+				exambine = True
+		if not exambine:
+			break
+	return items
+
+#搅拌排序
+def jban_select(items, stm = lambda x, y : x > y):
+	items = items[:]
+	for i in range(len(items)-1):
+		exim = False
+		for j in range(len(items) - 1 -i): 
+			#把最大的放到最后
+			if stm(items[j], items[j+1]):
+				items[j], items[j+1] = items[j+1], items[j]
+				exim = True
+		if exim:
+			exim = False
+			for x in range(len(items)-2-i, 0, -1):
+				#把最小的放在最前面
+				if stm(items[x-1], items[x]):
+					items[x-1], items[x] = items[x],items[x-1]
+					exim = True
+		if not exim:
+			break
+	return items
+
+#归并排序
+def collect(items1, items2, comp = lambda x,y : x <y):
+	items = []
+	#print('items1%s' %items1)
+	#print('items2%s' %items2)
+	index1, index2 = 0, 0
+	while index1 < len(items1) and index2 < len(items2):
+		if comp(items1[index1], items2[index2]):
+			items.append(items1[index1])
+			index1 += 1
+		else:
+			items.append(items2[index2])
+			index2 += 1
+	items += items1[index1:]
+	items += items2[index2:]
+	#print('items%s'%items)
+	return items
+def after(items):
+	return sort(list(items))
+
+def sort(items):
+	if len(items) < 2:
+		return items
+	mid = len(items) // 2
+	left = sort(items[:mid])
+	right = sort(items[mid:])
+	#print('left:%s' %left)
+	#print('right%s' %right)
+	return collect(left, right)
+print(after([23,45,2,4,5232,1]))
+
+#查找算法
+#顺序查找
+def function(items, key):
+	for number, value in enumerate(items):
+		if value == key:
+			return number
+	return -1 #若不存在key，安全退出
+
+#折半查找
+def half_holt(items, key):
+	#items为从小到大排列
+	start, end = 0, len(items)-1
+	while start < end:
+		mid = (start + end) // 2
+		if key < items[mid]:
+			end = mid -1
+		elif key > items[mid]:
+			start = mid +1
+		else:
+			return mid
+	return -1
+
+#穷举法(百元百鸡)
+#公鸡5元一只，母鸡3元一只，小鸡1元3只
+for i in range(20):
+	for j in range(33):
+		k = 100 - i - j
+		if i*5 + j*3 + k/3 == 100 and k % 3 == 0:
+			print('公鸡%d只，母鸡%d只，小鸡%d只' %(i, j, k))
+
+#五人分鱼
+fish = 6
+while True:
+	total = fish
+	enough = True
+	for _ in range(5):
+		#保证5次分鱼都是一样的
+		if (total-1) % 5 == 0:
+			total = (total - 1) // 5 *4
+		else:
+			enough = False
+			break
+	if enough:
+		print(fish)
+		break
+	fish += 5
+
+#贪婪法(不追求最优解，快速找到满意解)
+class power_weight():
+
+	def __init__(self, name, price, weight):
+		self.name = name
+		self.weight = weight
+		self.price = price
+	@property
+	def thing_count(self):
+		return self.price / self.weight
+
+def ip_thing():
+	name, weight, price = input('拥有的物品及属性：').split()
+	#split() 通过指定分隔符对字符串进行切片
+	return name, int(weight), int(price)
+
+def main():
+	max_weight, mun_thing = map(int, input('总重和总的物品件数：').split())
+	#map(function, iterable, ...),对序列根据方法排序
+	thing_rate = []
+	for _ in range(mun_thing):
+		thing_rate.append(power_weight(*ip_thing()))
+	thing_rate.sort(key=lambda x : x.thing_count ,reverse = True)
+	#key=lambda x : x.thing_count 不太懂
+	total_weight = 0
+	total_price = 0
+	print('ok')
+	for thing in thing_rate:
+		if total_weight + thing.weight <= max_weight:
+			print(f'小偷带走了{thing.name}')
+			total_weight += thing.weight
+			total_price += thing.price
+	print(f'总价值{total_price}美元')
+
+if __name__ == '__main__':
+		main()
+
+#快速排列(选择枢轴对元素进行划分，左边都比枢轴小右边都比枢轴大)
+def main(items, comp = lambda x, y : x <= y):
+	items = items[:]
+	func1(items, 0, len(items) - 1, comp)
+	return items
+
+def func1(items, start ,end, comp):
+	if start < end:
+		pol = func2(items, start, end, comp)
+		func1(items, start, pol-1, comp)
+		func1(items, pol +1, end,comp)
+
+def func2(items, start, end, comp):
+	boss = items[end]
+	i = start -1
+	for j in range(start, end):
+		if comp(items[j], boss):
+			i +=1
+			items[i], items[j] = items[j], items[i]
+	items[i+1], items[end] = items[end], items[i+1]
+	return i+1
+
+#动态规则
+items = list(map(int, input('输入数列').split()))
+overall = part = items[0]
+for i in range(1, len(items)):
+	part = max(items[i], part+items[i])
+	overall = max(part, overall)
+print(overall)
